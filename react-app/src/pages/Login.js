@@ -44,6 +44,7 @@ function App() {
       .then(response => {
         // console.log(response);
         cookies.set('token', response.token, {path: "/"});
+        cookies.set('mail', email, {path: "/"});
         window.location.href="./menu";
         // this.setState({ postId: data.id });
 

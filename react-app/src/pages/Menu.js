@@ -1,11 +1,22 @@
 import React, { Component } from 'react';
 import Cookies from 'universal-cookie';
-// import * as Values from '../constants/constants'
+import * as Values from '../constants/constants'
 // import { DropdownMenu, MenuItem } from 'react-bootstrap-dropdown-menu';
+import Table from 'react-bootstrap/Table'
 
 const cookies = new Cookies();
 
 class Menu extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            dataUser: [],
+            dataCursos: [],
+            dataTiempos: [],
+            selectedNameCurso: '',
+        };
+        this.input = React.createRef();
+      }
     
     
     cerrarSesion=()=>{
@@ -17,40 +28,139 @@ class Menu extends Component {
         if(!cookies.get('token')){
             window.location.href="./";
         }
+        this.getUsers();
+        this.getCursos();
+        this.getTiempos();
     }
 
-    // getUsers(){
+    getUsers(){
 
-    //     fetch(GETUSERS, {
-    //         method: 'POST',
-    //         headers: {
-    //           // "Content-Type": "application/json; charset=utf-8",
-    //           "Content-Type": "application/x-www-form-urlencoded",
-    //           "Authorization": "Bearer"+cookies.get('token'),
-    //         },
-    //         body: formData.toString(),
-    //       })
-    //         .then(response => response.json())
-    //         .then(response => {
-    //           console.log(response);
-    //           cookies.set('token', response.token, {path: "/"});
-    //           window.location.href="./menu";
-    //           // this.setState({ postId: data.id });
+        // fetch('http://localhost:3001/getUsers', {
+        fetch(USERS, {
+            method: 'POST',
+            headers: {
+              // "Content-Type": "application/json; charset=utf-8",
+              "Content-Type": "application/x-www-form-urlencoded",
+              "Authorization": "Bearer "+cookies.get('token'),
+            },
+            // body: formData.toString(),
+          })
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    dataUser: response,
+                });
+                console.log(this.state.dataUser);
+            //   cookies.set('token', response.token, {path: "/"});
+            //   window.location.href="./menu";
+              // this.setState({ postId: data.id });
       
-    //         },
-    //           (error) => {
-    //             console.log(error);
+            },
+              (error) => {
+                console.log(error);
       
-    //             // this.setState({
-    //             //   isLoaded: true,
-    //             //   error
-    //             // });
-    //           }
+                // this.setState({
+                //   isLoaded: true,
+                //   error
+                // });
+              }
       
-    //         );
+            );
+    }
 
-    // }
+    getCursos(){
 
+        fetch(CURSOS, {
+            method: 'POST',
+            headers: {
+              // "Content-Type": "application/json; charset=utf-8",
+              "Content-Type": "application/x-www-form-urlencoded",
+              "Authorization": "Bearer "+cookies.get('token'),
+            },
+            // body: formData.toString(),
+          })
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    dataCursos: response,
+                });
+                console.log(this.state.dataCursos);
+            //   cookies.set('token', response.token, {path: "/"});
+            //   window.location.href="./menu";
+              // this.setState({ postId: data.id });
+      
+            },
+              (error) => {
+                console.log(error);
+      
+                // this.setState({
+                //   isLoaded: true,
+                //   error
+                // });
+              }
+      
+            );
+    }
+    getTiempos(){
+
+        fetch('http://localhost:3001/getTiempos', {
+            method: 'POST',
+            headers: {
+              // "Content-Type": "application/json; charset=utf-8",
+              "Content-Type": "application/x-www-form-urlencoded",
+              "Authorization": "Bearer "+cookies.get('token'),
+            },
+            // body: formData.toString(),
+          })
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    dataTiempos: response,
+                });
+                console.log(this.state.dataTiempos);
+            //   cookies.set('token', response.token, {path: "/"});
+            //   window.location.href="./menu";
+              // this.setState({ postId: data.id });
+      
+            },
+              (error) => {
+                console.log(error);
+      
+                // this.setState({
+                //   isLoaded: true,
+                //   error
+                // });
+              }
+      
+            );
+    }
+    buildHoursOptions() {
+        var arr = [];
+
+        for (let i = 1; i <= 23; i++) {
+            arr.push(<option key={i} value="{i}">{i}</option>)
+        }
+
+        return arr; 
+    }
+    buildMinutesOptions() {
+        var arr = [];
+
+        for (let i = 1; i <= 59; i++) {
+            arr.push(<option key={i} value="{i}">{i}</option>)
+        }
+
+        return arr; 
+    }
+    handleCursosChange (e){
+        this.setState({selectedNameCurso: e.target.value});
+      }
+      addCurso(){
+        console.log('name curso: '+this.state.selectedNameCurso);
+
+
+      }
+      
     render() {
         console.log('token: '+ cookies.get('token'));
        
@@ -73,9 +183,127 @@ class Menu extends Component {
                 <br />
                 <button style={{float: 'right'}}
                 onClick={()=>this.cerrarSesion()}>Cerrar Sesión</button>
+
+
+
+
+                <Table striped bordered hover variant="dark">
+                    <thead>
+                        <tr>
+                            <th>Nombre usuario</th>
+                            <th>Tipo Curso</th>
+                            <th>Tiempo</th>
+                            <th>Nombre del curso</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {this.state.dataTiempos.map((dt) => (
+
+                            <tr key={dt._id}>
+                                <td>{dt.nombreUsuario}</td>
+                                <td>{dt.tipoCurso}</td>
+                                <td>{dt.dias+'d ,'+dt.horas+'h '+dt.minutos+'m '}</td>
+                                <td>{dt.nombreCurso}</td>
+                            </tr>
+                        ))
+                        }
+                    </tbody>
+                </Table>
+
+
+                <br/>
+
+
+                Añadir curso
+                <Table striped bordered hover variant="dark">
+                    <thead>
+                        <tr>
+                            <th>Nombre usuario</th>
+                            <th>Tipo Curso</th>
+                            <th>Días</th>
+                            <th>Horas</th>
+                            <th>Minutos</th>
+                            <th>Nombre del curso</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>
+                                <select id="dropdown">
+                                    {this.state.dataUser.map((du) => (
+                                        <option key={du._id} label={du.nombre} value={du.nombre}>N/A</option>
+                                    ))
+                                    }
+
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" 
+                                disabled={true}
+                                ref={this.tipoEnt} />
+                            </td>
+                            <td>
+                                <input type="text" ref={this.inputDias} />
+                            </td>
+                            <td>
+                                <select id="dropdown">
+                                    {this.buildHoursOptions()}
+                                </select>
+                            </td>
+                            <td>
+                                <select id="dropdown">
+                                    {this.buildMinutesOptions()}
+                                </select>
+
+                            </td>
+                            <td>
+
+                                {/* <td>{dt.tipoCurso}</td>
+                                <td>{dt.dias+'d ,'+dt.horas+'h '+dt.minutos+'m '}</td>
+                            <td>{dt.nombreCurso}</td> */}
+                                <select id="dropdown"
+                                value=''
+                                onChange={()=>this.handleChange}
+                                //  onChange={()=>this.handleCursosChange()} 
+                                 >
+                                    {/* <option>--</option> */}
+
+                                    {this.state.dataCursos.map((dc) => (
+                                        <option key={dc._id} label={dc.nombreCurso} value={dc.nombreCurso}></option>
+                                    ))
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </Table>
+                {/* {this.setState.selectedNameCurso} */}
+
+                <br/>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center"
+                    }}
+                >
+
+                    <button style={{ float: 'center' }}
+                        onClick={() => this.addCurso()}>Añadir</button>
+                </div>
+
+
+
+
             </div>
         );
     }
 }
-// const GETUSERS = Values.GETUSERS;
+const USERS = Values.USERS;
+const CURSOS = Values.CURSOS;
 export default Menu;
