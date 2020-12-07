@@ -8,8 +8,8 @@ import * as Values from '../constants/constants'
 import Cookies from 'universal-cookie';
 import md5 from 'md5';
 
-
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   
@@ -42,15 +42,21 @@ function App() {
     })
       .then(response => response.json())
       .then(response => {
-        // console.log(response);
-        cookies.set('token', response.token, {path: "/"});
-        cookies.set('mail', email, {path: "/"});
-        window.location.href="./menu";
-        // this.setState({ postId: data.id });
+        console.log(response.ok);
+
+
+          cookies.set('token', response.token, { path: "/" });
+          cookies.set('mail', email, { path: "/" });
+          // toast.success('accediendo..');
+          
+          window.location.href = "./menu";
+          // this.setState({ postId: data.id });
+        
 
       },
         (error) => {
-          console.log(error);
+          // console.log(error);
+          toast.error('Usuario/Contraseña invalido');
 
           // this.setState({
           //   isLoaded: true,
@@ -64,6 +70,8 @@ function App() {
 
     return (
         <div className="containerPrincipal">
+                           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+
             <div className="containerSecundario">
                 <div className="form-group">
                     <label>email: </label>
@@ -91,8 +99,18 @@ function App() {
                         disabled={!validateForm()}
                         onClick={() => login()}>Iniciar Sesión</button>
                 </div>
+            <ToastContainer 
+                position='bottom-center'
+                />
             </div>
+
+
+
+
+
         </div>
+
+        
 
     );
 }

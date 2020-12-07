@@ -12,11 +12,14 @@
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-bootstrap-dropdown-menu": "^1.1.15",
+    "react-confirm-alert": "^2.6.2",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
+    "react-toastify": "^6.1.0",
     "universal-cookie": "^4.0.4",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "winston": "^3.3.3"
   },
   "scripts": {
     "start": "react-scripts start",
